@@ -1,0 +1,16 @@
+.text-area {
+    -fx-font-size: 14px;
+}
+
+.light-mode {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.increase-font {
+    -fx-font-size: 16px;
+}
+
+.decrease-font {
+    -fx-font-size: 12px;
+}

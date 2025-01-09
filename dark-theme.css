@@ -1,0 +1,37 @@
+.root {
+    -fx-background-color: #2e2e2e;
+}
+
+.text-area {
+    -fx-control-inner-background: #3e3e3e;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-bar, .menu {
+    -fx-background-color: #2e2e2e;
+    -fx-text-fill: #ffffff;
+}
+
+.button {
+    -fx-background-color: #3e3e3e;
+    -fx-text-fill: #ffffff;
+}
+
+.label {
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item {
+    -fx-background-color: #333333;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item:hover {
+    -fx-background-color: #555555;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item:focused {
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffffff;
+}
