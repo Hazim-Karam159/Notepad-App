@@ -12,14 +12,20 @@ import javafx.scene.input.KeyCombination;
 import java.io.*;
 import java.util.Optional;
 import java.util.Timer;
-import      java.util.TimerTask;
+import java.util.TimerTask;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import java.net.URI;
 
 public class NotepadApp extends Application {
 
     private boolean isModified = false;
     private Label statusBar;
-    private int fontSize = 14;
+    private int fontSize = 18;
     private boolean isDarkMode = false;
+    private TextArea textArea;
 
     public static void main(String[] args) {
         launch(args);
@@ -27,10 +33,10 @@ public class NotepadApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-	 primaryStage.getIcons().add(new Image("icon.png"));
+        primaryStage.getIcons().add(new Image("icon.png"));
         BorderPane root = new BorderPane();
 
-        TextArea textArea = new TextArea();
+        textArea = new TextArea();
         textArea.getStyleClass().add("text-area");
         root.setCenter(textArea);
 
@@ -92,14 +98,21 @@ public class NotepadApp extends Application {
         MenuItem increaseFont = new MenuItem("Increase Font");
         MenuItem decreaseFont = new MenuItem("Decrease Font");
 
+        fontSize = 24;
+        textArea.setStyle("-fx-font-size: " + fontSize + "px;");
+
         increaseFont.setOnAction(e -> {
-            fontSize += 4;
-            textArea.setStyle("-fx-font-size: " + fontSize + "px;");
+            if (fontSize < 40) {
+                fontSize += 4;
+                textArea.setStyle("-fx-font-size: " + fontSize + "px;");
+            }
         });
 
         decreaseFont.setOnAction(e -> {
-            fontSize -= 2;
-            textArea.setStyle("-fx-font-size: " + fontSize + "px;");
+            if (fontSize > 12) {
+                fontSize -= 2;
+                textArea.setStyle("-fx-font-size: " + fontSize + "px;");
+            }
         });
 
         viewMenu.getItems().addAll(increaseFont, decreaseFont);
@@ -107,7 +120,7 @@ public class NotepadApp extends Application {
         Menu searchMenu = new Menu("Search");
         MenuItem findReplace = new MenuItem("Find and Replace");
 
-        findReplace.setOnAction(e -> findAndReplace(textArea));
+        findReplace.setOnAction(e -> findAndReplace());
         searchMenu.getItems().add(findReplace);
 
         Menu helpMenu = new Menu("Help");
@@ -122,15 +135,19 @@ public class NotepadApp extends Application {
         menuBar.getMenus().addAll(fileMenu, editMenu, viewMenu, searchMenu, helpMenu);
         root.setTop(menuBar);
 
-        Button toggleThemeButton = new Button("Switch to Dark Mode");
+        Button toggleThemeButton = new Button("🌙 Dark Mode");
+        toggleThemeButton.getStyleClass().add("switch-button");
+
         toggleThemeButton.setOnAction(e -> {
             if (isDarkMode) {
                 root.getStylesheets().remove("dark-theme.css");
-                toggleThemeButton.setText("Switch to Dark Mode");
+                root.getStylesheets().add("styles.css");
+                toggleThemeButton.setText("🌙 Dark Mode");
                 isDarkMode = false;
             } else {
+                root.getStylesheets().remove("styles.css");
                 root.getStylesheets().add("dark-theme.css");
-                toggleThemeButton.setText("Switch to Light Mode");
+                toggleThemeButton.setText("🌞 Light Mode");
                 isDarkMode = true;
             }
         });
@@ -167,7 +184,7 @@ public class NotepadApp extends Application {
         statusBar.setText("Line: " + line + ", Column: " + column + " | Words: " + wordCount + ", Characters: " + charCount);
     }
 
-    private void findAndReplace(TextArea textArea) {
+    private void findAndReplace() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Find and Replace");
 
@@ -178,6 +195,14 @@ public class NotepadApp extends Application {
 
         dialog.getDialogPane().setContent(new VBox(10, findField, replaceField));
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.getDialogPane().getStyleClass().add("find-replace-dialog");
+
+        if (isDarkMode) {
+            dialog.getDialogPane().getStylesheets().add("dark-theme.css");
+        } else {
+            dialog.getDialogPane().getStylesheets().add("styles.css");
+        }
 
         dialog.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -262,13 +287,46 @@ public class NotepadApp extends Application {
     private void showAbout() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About Notepad");
-        alert.setHeaderText(null);
-        alert.setContentText(""" 
-		Hello LinkedIn Connections 🙌
-                This is Notepad Application v1.0
-                Developed with JavaFX ZoOoMA Team
-                Enjoy editing your text files!
-                """);
+        alert.setHeaderText("Notepad Application v1.0");
+
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(20));
+
+        ImageView icon = new ImageView(new Image("icon.png"));
+        icon.setFitWidth(64);
+        icon.setFitHeight(64);
+
+        Label description = new Label("""
+            Hello LinkedIn Connections! 🙌
+            
+            This is a simple Notepad application developed using JavaFX.
+            It allows you to create, edit, and save text files with ease.
+            
+            Developed by: ZoOoMA Team
+            Version: 1.0
+            """);
+        description.setStyle("-fx-font-size: 14px;");
+
+        Hyperlink githubLink = new Hyperlink("Visit GitHub Repository");
+        githubLink.setOnAction(e -> {
+            try {
+                java.awt.Desktop.getDesktop().browse(new URI("https://github.com/Hazim-Karam159/Notepad-App"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        vbox.getChildren().addAll(icon, description, githubLink);
+        vbox.setAlignment(Pos.CENTER);
+
+        alert.getDialogPane().setContent(vbox);
+
+        if (isDarkMode) {
+            alert.getDialogPane().getStylesheets().add("dark-theme.css");
+        } else {
+            alert.getDialogPane().getStylesheets().add("styles.css");
+        }
+
         alert.showAndWait();
     }
 }
