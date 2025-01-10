@@ -71,7 +71,7 @@ Replace `/path/to/javafx-sdk` with the actual path to your JavaFX SDK.
 
 ## Screenshots
 
-!I will add the linkedin post to display my project.
+[!LinkedIn Post To Display My Project.](https://www.linkedin.com/posts/hazim-karam-b14737266_javafx-desktopapp-programming-activity-7283478300503498752-dER2?utm_source=share&utm_medium=member_desktop)
 
 ## Contributing
 
